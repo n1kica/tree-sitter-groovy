@@ -1589,19 +1589,15 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SEQ",
+              "type": "CHOICE",
               "members": [
                 {
-                  "type": "STRING",
-                  "value": "extends"
+                  "type": "SYMBOL",
+                  "name": "_superclass"
                 },
                 {
-                  "type": "FIELD",
-                  "name": "superclass",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "_primary_expression"
-                  }
+                  "type": "SYMBOL",
+                  "name": "_interface"
                 }
               ]
             },
@@ -1616,6 +1612,40 @@
           "content": {
             "type": "SYMBOL",
             "name": "closure"
+          }
+        }
+      ]
+    },
+    "_superclass": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "extends"
+        },
+        {
+          "type": "FIELD",
+          "name": "superclass",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_primary_expression"
+          }
+        }
+      ]
+    },
+    "_interface": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "implements"
+        },
+        {
+          "type": "FIELD",
+          "name": "interface",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_primary_expression"
           }
         }
       ]
@@ -4608,5 +4638,6 @@
   "precedences": [],
   "externals": [],
   "inline": [],
-  "supertypes": []
+  "supertypes": [],
+  "reserved": {}
 }
