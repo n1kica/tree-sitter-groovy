@@ -23,6 +23,18 @@ class Bar<T extends Collection> {
         superclass: (identifier)))
     body: (closure)))
 ==========
+Interface implementations
+==========
+class Foo implements Bar, Baz {
+}
+---
+(source_file
+  (class_definition
+    name: (identifier)
+		interface: (identifier)
+		interface: (identifier)
+	body: (closure)))
+==========
 Modifiers
 ==========
 private static final class Baz {
