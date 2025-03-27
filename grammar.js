@@ -214,12 +214,17 @@ module.exports = grammar({
       choice('@interface', 'interface', 'class'),
       field('name', choice($.identifier, $._type_identifier)),
       optional(field('generics', $.generic_parameters)),
-      optional(seq(
-        'extends',
-        field('superclass', $._primary_expression),
-      )),
+      optional(choice($._superclass, $._implementation)),
       field('body', $.closure),
     ),
+
+    _superclass: ($) =>
+      seq("extends", field("superclass", $._primary_expression)),
+
+    _implementation: ($) =>
+      seq("implements", $._interface, repeat(seq(",", $._interface))),
+
+    _interface: ($) => field("interface", $._primary_expression),
 
     generic_parameters: $ => seq(
       '<',
