@@ -1597,7 +1597,7 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "_interface"
+                  "name": "_implementations"
                 }
               ]
             },
@@ -1633,7 +1633,7 @@
         }
       ]
     },
-    "_interface": {
+    "_implementations": {
       "type": "SEQ",
       "members": [
         {
@@ -1641,14 +1641,34 @@
           "value": "implements"
         },
         {
-          "type": "FIELD",
-          "name": "interface",
+          "type": "SYMBOL",
+          "name": "_interface"
+        },
+        {
+          "type": "REPEAT",
           "content": {
-            "type": "SYMBOL",
-            "name": "_primary_expression"
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_interface"
+              }
+            ]
           }
         }
       ]
+    },
+    "_interface": {
+      "type": "FIELD",
+      "name": "interface",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_primary_expression"
+      }
     },
     "generic_parameters": {
       "type": "SEQ",
