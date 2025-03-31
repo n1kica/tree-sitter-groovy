@@ -5,6 +5,7 @@ def canon = [1, 2, "hello", "world"]
 def empty = []
 def trailing = [1, 2, 3,]
 def nested = ["hello", ["world", ["three"]]]
+def (a, b) = [1, 2]
 ---
 (source_file
   (declaration
@@ -35,4 +36,11 @@ def nested = ["hello", ["world", ["three"]]]
           (string_content))
         (list
           (string
-            (string_content)))))))
+            (string_content))))))
+  (declaration
+    name: (tuple_pattern
+			(identifier)
+			(identifier))
+    value: (list
+      (number_literal)
+      (number_literal))))

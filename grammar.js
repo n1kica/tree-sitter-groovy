@@ -18,12 +18,12 @@ const PREC = {
   STATEMENT: 17
 }
 
-const regexp_or = (regexes) => new RegExp(regexes.map(r =>'(?:('+r.source+'))').join('|'))
+const regexp_or = (regexes) => new RegExp(regexes.map(r => '(?:(' + r.source + '))').join('|'))
 
 const VARIABLE_REGEX = /[$_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00F8\u0100-\uFFFE][$_0-9a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00F8\u0100-\uFFFE]*/
 const CONSTANT_REGEX = /[_A-Z][$_0-9A-Z]*/
 const IDENTIFIER_REGEX = regexp_or([VARIABLE_REGEX, CONSTANT_REGEX])
-const TYPE_REGEX =  /[A-Z][$_0-9a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00F8\u0100-\uFFFE]*/
+const TYPE_REGEX = /[A-Z][$_0-9a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00F8\u0100-\uFFFE]*/
 
 const list_of = (e) => seq(
   repeat(prec.left(seq(e, ','))),
@@ -40,7 +40,6 @@ module.exports = grammar({
   conflicts: $ => [ //TODO: dynamic precedence, heuristics? eg capital letter
     [$._callable_expression, $.juxt_function_call],
     [$._callable_expression, $._juxt_argument_list],
-    [$._juxtable_expression, $._juxt_argument_list],
   ],
 
   rules: {
@@ -109,12 +108,12 @@ module.exports = grammar({
       prec.left(1, seq(
         choice($._primary_expression, $._type_identifier),
         repeat1(seq(
-        '.',
-        choice(
-          $.identifier,
-          $._type_identifier,
-          $.parenthesized_expression,
-        ))),
+          '.',
+          choice(
+            $.identifier,
+            $._type_identifier,
+            $.parenthesized_expression,
+          ))),
       )),
 
     _import_name: $ => choice(
@@ -259,8 +258,8 @@ module.exports = grammar({
       seq(
         '/**',
         // optional(
-          token.immediate(/[*\n\s]+/),
-          alias(token.immediate(/[^\n\.]+[\.]?/), $.first_line),
+        token.immediate(/[*\n\s]+/),
+        alias(token.immediate(/[^\n\.]+[\.]?/), $.first_line),
         // ),
         repeat(
           choice(
@@ -275,12 +274,12 @@ module.exports = grammar({
         '*/'
       ),
 
-    groovy_doc_param: $ => seq (
+    groovy_doc_param: $ => seq(
       '@param',
       $.identifier
     ),
 
-    groovy_doc_throws: $ => seq (
+    groovy_doc_throws: $ => seq(
       '@throws',
       $.identifier
     ),
@@ -300,25 +299,16 @@ module.exports = grammar({
           choice(
             '_',
             seq(
-              choice(field('type', $._type), 'def'),
-              field('name', $.identifier),
-              optional(seq('=', field('value', $._expression)))
-            ),
-          )
-        ),
-        seq(
-          repeat1($.modifier),
-          choice(
-            '_',
-            seq(
               optional(choice(field('type', $._type), 'def')),
-              field('name', $.identifier),
+              field('name', choice($.identifier, $.tuple_pattern)),
               optional(seq('=', field('value', $._expression)))
             ),
           )
         ),
       ),
     ),
+
+    tuple_pattern: ($) => seq("(", $.identifier, repeat(seq(",", $.identifier)), ")"),
 
     parenthesized_expression: ($) =>
       prec(PREC.PRIORITY, choice(
@@ -355,11 +345,11 @@ module.exports = grammar({
       $._type_identifier,
     ),
 
-    _juxtable_expression: $ => choice(
+    _juxtable_expression: $ => prec(1, choice(
       $.dotted_identifier,
       $.identifier,
       $.index,
-    ),
+    )),
 
     do_while_loop: $ => seq(
       'do',
@@ -371,7 +361,7 @@ module.exports = grammar({
       field('condition', $.parenthesized_expression),
     ),
 
-    for_parameters: $ => seq (
+    for_parameters: $ => seq(
       '(',
       field('initializer', optional(seq(
         $.declaration,
